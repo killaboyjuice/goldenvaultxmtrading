@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/site-layout";
 import { useAuth } from "@/lib/auth-context";
-import { externalSupabase } from "@/integrations/external-externalSupabase/client";
+import { externalSupabase } from "@/integrations/external-supabase/client";
 import { Wallet, TrendingUp, Activity, BarChart3, ArrowDownToLine, ArrowUpFromLine, ChevronUp, X } from "lucide-react";
 import { toast } from "sonner";
 

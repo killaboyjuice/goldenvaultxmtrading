@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { externalSupabase } from "@/integrations/external-externalSupabase/client";
-import type { Session, User } from "@externalSupabase/externalSupabase-js";
+import { externalSupabase } from "@/integrations/external-supabase/client";
+import type { Session, User } from "@supabase/supabase-js";
 
 interface AuthContextValue {
   session: Session | null;

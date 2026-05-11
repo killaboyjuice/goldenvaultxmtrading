@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { SiteLayout } from "@/components/site-layout";
-import { externalSupabase } from "@/integrations/external-externalSupabase/client";
+import { externalSupabase } from "@/integrations/external-supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
