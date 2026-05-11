@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/site-layout";
 import { useAuth } from "@/lib/auth-context";
-import { supabase } from "@/integrations/supabase/client";
+import { externalSupabase } from "@/integrations/external-externalSupabase/client";
 import { Wallet, TrendingUp, Activity, BarChart3, ArrowDownToLine, ArrowUpFromLine, ChevronUp, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -44,22 +44,22 @@ function DashboardPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
+    externalSupabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
       if (data) setProfile(data as Profile);
     });
 
-    const channel = supabase
+    const channel = externalSupabase
       .channel("profile-changes")
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${user.id}` }, (p) => {
         setProfile(p.new as Profile);
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { externalSupabase.removeChannel(channel); };
   }, [user]);
 
   useEffect(() => {
-    supabase.from("sentiment_votes").select("vote").then(({ data }) => {
+    externalSupabase.from("sentiment_votes").select("vote").then(({ data }) => {
       if (!data) return;
       const b = data.filter((d) => d.vote === "bullish").length;
       const r = data.filter((d) => d.vote === "bearish").length;
@@ -71,7 +71,7 @@ function DashboardPage() {
     if (!user) return;
     setVoted(vote);
     setSentiment((s) => ({ ...s, [vote]: s[vote] + 1 }));
-    const { error } = await supabase.from("sentiment_votes").insert({ user_id: user.id, vote });
+    const { error } = await externalSupabase.from("sentiment_votes").insert({ user_id: user.id, vote });
     if (error) toast.error(error.message);
     else toast.success(`Vote recorded: ${vote}`);
   };
