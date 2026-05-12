@@ -16,7 +16,7 @@ export const Route = createFileRoute("/markets")({
   }),
 });
 
-const TABS = ["All", "Crypto", "Forex", "Futures", "Commodity", "NFT"] as const;
+const TABS = ["All", "Crypto", "Forex", "Stock", "Futures", "Commodity", "NFT"] as const;
 
 function MarketsPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("All");
