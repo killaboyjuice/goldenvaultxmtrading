@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import logo from "@/assets/logo.png";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -18,8 +19,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-[oklch(0.78_0.16_75)] to-[oklch(0.55_0.13_60)] shadow-gold">
-            <span className="font-display text-lg font-black text-[oklch(0.15_0.01_60)]">G</span>
+          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-[oklch(0.78_0.16_75)] to-[oklch(0.55_0.13_60)] shadow-gold">
+            <img src={logo} alt="Golden Vault XM logo" className="h-full w-full object-cover" />
           </div>
           <div className="leading-tight">
             <div className="text-sm font-bold tracking-wider text-gold">GOLDEN VAULT XM</div>
