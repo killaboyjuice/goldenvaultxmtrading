@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import logo from "@/assets/logo.png";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
