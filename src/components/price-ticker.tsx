@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { ASSETS } from "@/lib/market-data";
+import { fetchLivePrices } from "@/lib/live-prices.functions";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface PriceState {
   price: number;
   change: number;
 }
+
+const POLL_MS = 8000;
 
 export function usePrices(symbols: string[]) {
   const [prices, setPrices] = useState<Record<string, PriceState>>(() => {
@@ -16,12 +20,44 @@ export function usePrices(symbols: string[]) {
     });
     return init;
   });
+  const fetchPricesFn = useServerFn(fetchLivePrices);
+  const liveRef = useRef<Set<string>>(new Set());
 
+  // Poll real prices from Twelve Data
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      try {
+        const { prices: live } = await fetchPricesFn({ data: { symbols } });
+        if (cancelled || !live) return;
+        setPrices((prev) => {
+          const next = { ...prev };
+          for (const [sym, p] of Object.entries(live)) {
+            const old = prev[sym]?.price ?? p;
+            next[sym] = { price: p, change: p - old };
+            liveRef.current.add(sym);
+          }
+          return next;
+        });
+      } catch {
+        // ignore
+      }
+    };
+    run();
+    const id = setInterval(run, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [symbols.join(","), fetchPricesFn]);
+
+  // Smooth simulated ticks between polls (only for symbols without live data)
   useEffect(() => {
     const id = setInterval(() => {
       setPrices((prev) => {
         const next = { ...prev };
         for (const sym of symbols) {
+          if (liveRef.current.has(sym)) continue;
           const asset = ASSETS.find((a) => a.symbol === sym);
           if (!asset) continue;
           const cur = prev[sym]?.price ?? asset.basePrice;
