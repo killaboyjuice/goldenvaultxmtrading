@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/site-layout";
-import { LiveChart } from "@/components/live-chart";
+import { ChartPanel } from "@/components/chart-panel";
 import { PriceCard, usePrices } from "@/components/price-ticker";
 import { ASSETS } from "@/lib/market-data";
 import { Search, Filter, TrendingUp, TrendingDown } from "lucide-react";
@@ -72,20 +72,8 @@ function MarketsPage() {
       <section className="bg-background py-10">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="rounded-lg border border-border/50 bg-card p-3 sm:p-5">
-              <div className="mb-3 flex items-center justify-between">
-                <div>
-                  <div className="font-display text-xl font-bold">{selected}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {ASSETS.find((a) => a.symbol === selected)?.label}
-                  </div>
-                </div>
-                <span className="rounded bg-bull/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-bull">
-                  ● LIVE
-                </span>
-              </div>
-              <LiveChart symbol={selected} height={420} />
-            </div>
+            <ChartPanel symbol={selected} height={420} />
+            
 
             <div className="space-y-2">
               <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">

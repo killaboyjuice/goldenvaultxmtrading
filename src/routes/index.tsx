@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site-layout";
-import { LiveChart } from "@/components/live-chart";
+import { ChartPanel } from "@/components/chart-panel";
 import { PriceCard } from "@/components/price-ticker";
 import { ArrowRight, Globe, TrendingUp, BarChart3, Zap, Shield, Users, Target, Activity } from "lucide-react";
 
@@ -66,8 +66,8 @@ function Hero() {
           </div>
         </div>
 
-        <div className="mt-12 rounded-lg border border-border/50 bg-card p-3 shadow-glow sm:p-5">
-          <LiveChart symbol="S&P 500" height={360} />
+        <div className="mt-12 shadow-glow">
+          <ChartPanel symbol="S&P 500" height={360} />
         </div>
       </div>
     </section>

@@ -4,16 +4,36 @@ import {
   ASSETS,
   generateInitialCandles,
   nextSimulatedTick,
-  newCandleAfter,
   type Candle,
 } from "@/lib/market-data";
+
+export type Timeframe = "1m" | "5m" | "15m" | "1h" | "4h" | "D";
+
+const TF_SECONDS: Record<Timeframe, number> = {
+  "1m": 60,
+  "5m": 300,
+  "15m": 900,
+  "1h": 3600,
+  "4h": 14400,
+  D: 86400,
+};
+
+const TF_BINANCE: Record<Timeframe, string> = {
+  "1m": "1m",
+  "5m": "5m",
+  "15m": "15m",
+  "1h": "1h",
+  "4h": "4h",
+  D: "1d",
+};
 
 interface Props {
   symbol: string;
   height?: number;
+  timeframe?: Timeframe;
 }
 
-export function LiveChart({ symbol, height = 380 }: Props) {
+export function LiveChart({ symbol, height = 380, timeframe = "1m" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -21,6 +41,7 @@ export function LiveChart({ symbol, height = 380 }: Props) {
   useEffect(() => {
     if (!containerRef.current) return;
     const asset = ASSETS.find((a) => a.symbol === symbol) ?? ASSETS[0];
+    const intervalSec = TF_SECONDS[timeframe];
 
     const chart = createChart(containerRef.current, {
       height,
@@ -33,7 +54,7 @@ export function LiveChart({ symbol, height = 380 }: Props) {
         vertLines: { color: "rgba(168, 162, 158, 0.06)" },
         horzLines: { color: "rgba(168, 162, 158, 0.06)" },
       },
-      timeScale: { timeVisible: true, secondsVisible: false, borderColor: "rgba(168,162,158,0.1)" },
+      timeScale: { timeVisible: timeframe !== "D", secondsVisible: false, borderColor: "rgba(168,162,158,0.1)" },
       rightPriceScale: { borderColor: "rgba(168,162,158,0.1)" },
       crosshair: { mode: 1 },
     });
@@ -50,15 +71,18 @@ export function LiveChart({ symbol, height = 380 }: Props) {
     chartRef.current = chart;
     seriesRef.current = series;
 
-    let candles: Candle[] = generateInitialCandles(asset.basePrice, asset.volatility, 150);
+    let candles: Candle[] = generateInitialCandlesForInterval(asset.basePrice, asset.volatility, intervalSec, 200);
     series.setData(candles as any);
+    chart.timeScale().fitContent();
 
     let ws: WebSocket | null = null;
     let simInterval: ReturnType<typeof setInterval> | null = null;
 
     if (asset.binanceSymbol) {
       try {
-        ws = new WebSocket(`wss://stream.binance.com:9443/ws/${asset.binanceSymbol}@kline_1m`);
+        ws = new WebSocket(
+          `wss://stream.binance.com:9443/ws/${asset.binanceSymbol}@kline_${TF_BINANCE[timeframe]}`,
+        );
         ws.onmessage = (ev) => {
           try {
             const msg = JSON.parse(ev.data);
@@ -76,15 +100,12 @@ export function LiveChart({ symbol, height = 380 }: Props) {
               candles[candles.length - 1] = candle;
             } else if (last && candle.time > last.time) {
               candles.push(candle);
-              if (candles.length > 300) candles.shift();
+              if (candles.length > 400) candles.shift();
             }
             series.update(candle as any);
           } catch {}
         };
-        ws.onerror = () => {
-          // fallback to simulation
-          startSim();
-        };
+        ws.onerror = () => startSim();
       } catch {
         startSim();
       }
@@ -98,11 +119,16 @@ export function LiveChart({ symbol, height = 380 }: Props) {
         const updated = nextSimulatedTick(last, asset.volatility);
         candles[candles.length - 1] = updated;
         series.update(updated as any);
-        // new candle every 60 ticks
         if (Math.random() < 0.05) {
-          const next = newCandleAfter(updated);
+          const next: Candle = {
+            time: updated.time + intervalSec,
+            open: updated.close,
+            high: updated.close,
+            low: updated.close,
+            close: updated.close,
+          };
           candles.push(next);
-          if (candles.length > 300) candles.shift();
+          if (candles.length > 400) candles.shift();
         }
       }, 1000);
     }
@@ -114,14 +140,35 @@ export function LiveChart({ symbol, height = 380 }: Props) {
     };
     onResize();
     window.addEventListener("resize", onResize);
+    const ro = new ResizeObserver(onResize);
+    ro.observe(containerRef.current);
 
     return () => {
       window.removeEventListener("resize", onResize);
+      ro.disconnect();
       if (ws) ws.close();
       if (simInterval) clearInterval(simInterval);
       chart.remove();
     };
-  }, [symbol, height]);
+  }, [symbol, height, timeframe]);
 
   return <div ref={containerRef} className="w-full" style={{ height }} />;
+}
+
+function generateInitialCandlesForInterval(base: number, vol: number, intervalSec: number, count: number): Candle[] {
+  const candles: Candle[] = [];
+  let price = base;
+  const now = Math.floor(Date.now() / 1000);
+  const aligned = now - (now % intervalSec);
+  for (let i = count; i > 0; i--) {
+    const time = aligned - i * intervalSec;
+    const open = price;
+    const change = (Math.random() - 0.5) * 2 * vol * price;
+    const close = Math.max(0.0001, open + change);
+    const high = Math.max(open, close) + Math.random() * vol * price * 0.5;
+    const low = Math.min(open, close) - Math.random() * vol * price * 0.5;
+    candles.push({ time, open, high, low, close });
+    price = close;
+  }
+  return candles;
 }
