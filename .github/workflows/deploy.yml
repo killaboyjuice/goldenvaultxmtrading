@@ -1,8 +1,7 @@
 name: Deploy
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 permissions:
   contents: read
   pages: write
@@ -21,3 +20,4 @@ jobs:
         with:
           path: ./.output/public
       - uses: actions/deploy-pages@v4
+      
