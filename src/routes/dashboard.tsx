@@ -230,6 +230,7 @@ function DashboardPage() {
           </div>
         </div>
       </section>
+      <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} />
     </SiteLayout>
   );
 }
