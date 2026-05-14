@@ -37,6 +37,7 @@ function DashboardPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [voted, setVoted] = useState<string | null>(null);
   const [showVote, setShowVote] = useState(true);
+  const [depositOpen, setDepositOpen] = useState(false);
   const [sentiment, setSentiment] = useState({ bullish: 38, bearish: 24 });
 
   useEffect(() => {
