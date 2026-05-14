@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { externalSupabase } from "@/integrations/external-supabase/client";
 import { Wallet, TrendingUp, Activity, BarChart3, ArrowDownToLine, ArrowUpFromLine, ChevronUp, X } from "lucide-react";
 import { toast } from "sonner";
+import { DepositModal } from "@/components/deposit-modal";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
