@@ -1,13 +1,14 @@
-name: Deploy TanStack Site
+name: Deploy
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 permissions:
   contents: read
   pages: write
   id-token: write
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,5 +19,5 @@ jobs:
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: './.output/public'
+          path: ./.output/public
       - uses: actions/deploy-pages@v4
