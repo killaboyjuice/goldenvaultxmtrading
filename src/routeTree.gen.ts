@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WalletsRouteImport } from './routes/wallets'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MarketsRouteImport } from './routes/markets'
@@ -16,6 +17,11 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WalletsRoute = WalletsRouteImport.update({
+  id: '/wallets',
+  path: '/wallets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/markets': typeof MarketsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
+  '/wallets': typeof WalletsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/markets': typeof MarketsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
+  '/wallets': typeof WalletsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/markets': typeof MarketsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
+  '/wallets': typeof WalletsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,8 +90,16 @@ export interface FileRouteTypes {
     | '/markets'
     | '/register'
     | '/support'
+    | '/wallets'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/markets' | '/register' | '/support'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/markets'
+    | '/register'
+    | '/support'
+    | '/wallets'
   id:
     | '__root__'
     | '/'
@@ -91,6 +108,7 @@ export interface FileRouteTypes {
     | '/markets'
     | '/register'
     | '/support'
+    | '/wallets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -100,10 +118,18 @@ export interface RootRouteChildren {
   MarketsRoute: typeof MarketsRoute
   RegisterRoute: typeof RegisterRoute
   SupportRoute: typeof SupportRoute
+  WalletsRoute: typeof WalletsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallets': {
+      id: '/wallets'
+      path: '/wallets'
+      fullPath: '/wallets'
+      preLoaderRoute: typeof WalletsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -156,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   MarketsRoute: MarketsRoute,
   RegisterRoute: RegisterRoute,
   SupportRoute: SupportRoute,
+  WalletsRoute: WalletsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

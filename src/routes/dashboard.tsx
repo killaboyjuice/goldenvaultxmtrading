@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { externalSupabase } from "@/integrations/external-supabase/client";
 import { Wallet, TrendingUp, Activity, BarChart3, ArrowDownToLine, ArrowUpFromLine, ChevronUp, X } from "lucide-react";
 import { toast } from "sonner";
+import { DepositModal } from "@/components/deposit-modal";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -36,6 +37,7 @@ function DashboardPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [voted, setVoted] = useState<string | null>(null);
   const [showVote, setShowVote] = useState(true);
+  const [depositOpen, setDepositOpen] = useState(false);
   const [sentiment, setSentiment] = useState({ bullish: 38, bearish: 24 });
 
   useEffect(() => {
@@ -129,14 +131,14 @@ function DashboardPage() {
             <div className="rounded-lg border border-border/50 bg-card p-5">
               <h3 className="font-display text-lg font-bold">Quick Actions</h3>
               <div className="mt-4 space-y-3">
-                <button onClick={() => onAction("Deposit Funds")} className="flex w-full items-center justify-center gap-2 rounded bg-gold py-2.5 text-sm font-bold text-[oklch(0.15_0.01_60)]">
+                <button onClick={() => setDepositOpen(true)} className="flex w-full items-center justify-center gap-2 rounded bg-gold py-2.5 text-sm font-bold text-[oklch(0.15_0.01_60)]">
                   <ArrowDownToLine className="h-4 w-4" /> Deposit Funds
                 </button>
                 <button onClick={() => onAction("Withdraw Funds")} className="flex w-full items-center justify-center gap-2 rounded border border-gold/60 py-2.5 text-sm font-bold text-gold">
                   <ArrowUpFromLine className="h-4 w-4" /> Withdraw Funds
                 </button>
-                <Link to="/markets" className="flex w-full items-center justify-center gap-2 rounded border border-border/60 py-2.5 text-sm font-medium">
-                  <BarChart3 className="h-4 w-4" /> View Reports
+                <Link to="/wallets" className="flex w-full items-center justify-center gap-2 rounded border border-border/60 py-2.5 text-sm font-medium">
+                  <Wallet className="h-4 w-4" /> View Wallets
                 </Link>
               </div>
 
@@ -228,6 +230,7 @@ function DashboardPage() {
           </div>
         </div>
       </section>
+      <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} />
     </SiteLayout>
   );
 }

@@ -12,7 +12,7 @@ export function SiteHeader() {
     { to: "/", label: "Home" },
     { to: "/markets", label: "Markets" },
     { to: "/support", label: "Support" },
-    ...(user ? [{ to: "/dashboard", label: "Dashboard" }] : []),
+    ...(user ? [{ to: "/dashboard", label: "Dashboard" }, { to: "/wallets", label: "Wallets" }] : []),
   ];
 
   return (
