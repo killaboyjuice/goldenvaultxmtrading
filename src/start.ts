@@ -1,9 +1,16 @@
-import { createStartHandler, defaultRenderHandler } from '@tanstack/start/server'
-import { createRouter } from './router'
+import { createRouter } from './router';
+import { ReactDOM } from 'react-dom/client';
+import React from 'react';
 
-export default createStartHandler({
-  createRouter,
-  getRouterManifest: () => {
-    return (globalThis as any).MANIFEST
-  },
-})(defaultRenderHandler)
+const router = createRouter();
+
+const rootElement = document.getElementById('root');
+
+if (rootElement && !rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  );
+}
