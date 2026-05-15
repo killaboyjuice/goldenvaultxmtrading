@@ -20,4 +20,3 @@ jobs:
         with:
           path: ./.output/public
       - uses: actions/deploy-pages@v4
-      
