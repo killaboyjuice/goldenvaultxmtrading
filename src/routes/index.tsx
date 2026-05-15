@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site-layout";
 import { ChartPanel } from "@/components/chart-panel";
 import { PriceCard } from "@/components/price-ticker";
+import { CinematicHero } from "@/components/cinematic-hero";
 import { ArrowRight, Globe, TrendingUp, BarChart3, Zap, Shield, Users, Target, Activity } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -17,7 +18,8 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   return (
     <SiteLayout>
-      <Hero />
+      <CinematicHero />
+      <FeaturedChart />
       <MarketViz />
       <Steps />
       <Stats />
@@ -28,45 +30,11 @@ function HomePage() {
   );
 }
 
-function Hero() {
+function FeaturedChart() {
   return (
-    <section className="relative overflow-hidden bg-hero">
-      <div className="absolute inset-0 grid-pattern opacity-50" />
-      <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-24">
-        <div className="text-center">
-          <div className="text-xs tracking-[0.3em] text-muted-foreground">
-            <span className="mr-2 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-bull align-middle" />
-            System Online // Live Data
-          </div>
-          <h1 className="mt-6 font-display text-5xl font-black leading-[0.95] sm:text-7xl">
-            <div>PRECISION</div>
-            <div className="text-gradient-gold">VELOCITY</div>
-            <div>INSIGHT.</div>
-          </h1>
-          <p className="mx-auto mt-8 max-w-2xl border-l-2 border-gold/60 pl-4 text-left text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Experience access to institutional-grade trading infrastructure engineered for precision,
-            performance, and global market reach. Engage seamlessly across multiple financial markets,
-            including Forex, Cryptocurrency, Futures, Commodities, and NFT ecosystems, all within a
-            unified and advanced trading environment. Built with a strong emphasis on security,
-            reliability, and execution speed.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              to="/register"
-              className="rounded-md bg-foreground px-6 py-3 text-xs font-bold uppercase tracking-wider text-background transition hover:bg-gold"
-            >
-              Initialize Trading
-            </Link>
-            <Link
-              to="/markets"
-              className="flex items-center gap-2 rounded-md bg-purple px-6 py-3 text-xs font-bold uppercase tracking-wider text-white"
-            >
-              Explore Markets <Target className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="mt-12 shadow-glow">
+    <section className="relative bg-hero py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="shadow-glow">
           <ChartPanel symbol="S&P 500" height={360} />
         </div>
       </div>
