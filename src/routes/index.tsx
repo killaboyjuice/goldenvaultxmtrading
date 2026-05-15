@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site-layout";
 import { ChartPanel } from "@/components/chart-panel";
 import { PriceCard } from "@/components/price-ticker";
+import { CinematicHero } from "@/components/cinematic-hero";
 import { ArrowRight, Globe, TrendingUp, BarChart3, Zap, Shield, Users, Target, Activity } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -17,7 +18,8 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   return (
     <SiteLayout>
-      <Hero />
+      <CinematicHero />
+      <FeaturedChart />
       <MarketViz />
       <Steps />
       <Stats />
