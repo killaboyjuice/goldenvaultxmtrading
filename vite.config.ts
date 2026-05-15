@@ -1,15 +1,12 @@
 import { defineConfig } from "vite";
 import { tanstackBuildConfig } from "@lovable.dev/vite-tanstack-config";
-import path from "path";
+import path from "node:path";
 
 export default defineConfig({
   ...tanstackBuildConfig,
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "src"),
     },
   },
-  build: {
-    outDir: "dist",
-  }
 });
