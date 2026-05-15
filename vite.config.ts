@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
-import { tanstackBuildConfig } from "@lovable.dev/vite-tanstack-config";
-import path from "node:path";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
-  ...tanstackBuildConfig,
+  plugins: [react(), TanStackRouterVite()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
