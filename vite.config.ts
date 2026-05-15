@@ -13,4 +13,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  ssr: {
+    noExternal: [
+      '@tanstack/start', 
+      '@tanstack/react-router', 
+      '@tanstack/start-storage-context'
+    ],
+  },
 });
+
