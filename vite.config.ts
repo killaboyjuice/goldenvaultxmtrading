@@ -4,7 +4,9 @@ import { tanstackStart } from '@tanstack/start-vite-plugin'
 
 export default defineConfig({
   plugins: [
-    tanstackStart(),
+    tanstackStart({ 
+      target: 'vercel'  // Add this line
+    }),
     react(),
   ],
 })
